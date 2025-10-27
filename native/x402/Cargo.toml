@@ -3,6 +3,11 @@ name = "x402"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+name = "x402"
+path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
 anyhow = "1.0.100"
 rustler = "0.37.0"

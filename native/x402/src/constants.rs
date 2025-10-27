@@ -1,7 +1,7 @@
-use std::sync::Mutex;
-use once_cell::sync::Lazy;
 use bundles_rs::{ans104::tags::Tag, bundler::BundlerClient};
 use once_cell;
+use once_cell::sync::Lazy;
+use std::sync::Mutex;
 
 pub const MU_RL: &str = "https://mu.ao-testnet.xyz";
 
@@ -21,4 +21,11 @@ pub static AO_TAGS: Lazy<Mutex<Vec<Tag>>> = Lazy::new(|| {
 pub static BUNDLER_CLIENT: Lazy<Mutex<BundlerClient>> = Lazy::new(|| {
     let client = BundlerClient::turbo().build().unwrap();
     Mutex::new(client)
+});
+
+pub static RT: Lazy<tokio::runtime::Runtime> = Lazy::new(|| {
+    tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .build()
+        .expect("failed to build tokio runtime")
 });
