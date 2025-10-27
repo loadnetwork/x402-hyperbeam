@@ -1,0 +1,40 @@
+port = 8734.
+priv_key_location = "hyperbeam-key.json".
+store = #{
+    <<"store-module">> => hb_store_fs,
+    <<"name">> => <<"cache-mainnet">>
+}.
+gateway = "https://arweave.net".
+process_now_from_cache = false.
+access_remote_cache_for_client = true.
+
+% x402 Facilitator Config
+x402_supported_tokens = [
+    #{
+        <<"asset">> => "SAR3pyWRX7dbIcCRgbJsoCQ1i0jPh67b0SUlAM1XhVg",
+        <<"network">> => "ao",
+        <<"description">> => "Premium access",
+        <<"mime-type">> => "application/json",
+        <<"pay-to">> => "auto",
+        <<"price">> => 1,
+        <<"max-timeout-seconds">> => 300
+    }
+].
+
+x402_token_process = "SAR3pyWRX7dbIcCRgbJsoCQ1i0jPh67b0SUlAM1XhVg".
+x402_price_per_request = 1.
+x402_recipient = "auto". % "auto" refers for the hb:wallet() address (hb node)
+
+% Protected paths that require x402 payment
+x402_protected_paths = [
+    "/protected-data",
+    "/premium/*"
+].
+
+% Register x402 device as request preprocessor
+on = #{
+    <<"request">> => #{
+        <<"device">> => <<"x402@1.0">>,
+        <<"path">> => <<"request">>
+    }
+}.
