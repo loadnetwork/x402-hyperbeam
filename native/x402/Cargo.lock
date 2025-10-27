@@ -2533,7 +2533,10 @@ name = "x402"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "base64 0.22.1",
  "bundles_rs",
+ "once_cell",
+ "reqwest",
  "rustler",
  "serde",
  "serde_json",
