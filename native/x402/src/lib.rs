@@ -10,7 +10,6 @@ pub mod constants;
 use ao::post_to_mu;
 use constants::{AO_TAGS, RT};
 
-
 async fn verify_construct_payment(x_payment: &str) -> Result<String> {
     let di_bytes = URL_SAFE_NO_PAD
         .decode(x_payment.trim())
@@ -23,7 +22,11 @@ async fn verify_construct_payment(x_payment: &str) -> Result<String> {
 
     for required in &required_tags {
         if !data_item.tags.contains(required) {
-            return Err(anyhow!("dataitem missing required tag {}={}", required.name, required.value));
+            return Err(anyhow!(
+                "dataitem missing required tag {}={}",
+                required.name,
+                required.value
+            ));
         }
     }
 

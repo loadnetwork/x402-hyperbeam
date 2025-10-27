@@ -1,6 +1,5 @@
 use bundles_rs::{ans104::tags::Tag, bundler::BundlerClient};
-use once_cell;
-use once_cell::sync::Lazy;
+use once_cell::{self, sync::Lazy};
 use std::sync::Mutex;
 
 pub const MU_RL: &str = "https://mu.ao-testnet.xyz";
