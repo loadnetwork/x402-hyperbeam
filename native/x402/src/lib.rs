@@ -109,8 +109,7 @@ mod tests {
         let active_token = current_tokens[1].clone();
         drop(current_tokens);
 
-        let target =
-            arweave_b64_to_32(&active_token).expect("decode configured payment target");
+        let target = arweave_b64_to_32(&active_token).expect("decode configured payment target");
 
         let mut tags = AO_TAGS.lock().expect("AO_TAGS mutex poisoned").clone();
         tags.push(Tag::new("Recipient", "i4gRwtgSJumEv5-m16VTnsK4uZiVzA__pnVDdYsqQww"));
@@ -137,10 +136,7 @@ mod tests {
             .expect("failed to reach local HyperBEAM node");
 
         let status = response.status();
-        let body = response
-            .text()
-            .await
-            .expect("failed to read premium response body");
+        let body = response.text().await.expect("failed to read premium response body");
 
         assert!(status.is_success(), "expected success status, got {}", status);
         println!("unlocked x402 content: {:?}", body);
