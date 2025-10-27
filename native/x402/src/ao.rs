@@ -12,7 +12,6 @@ pub fn arweave_b64_to_32(s: &str) -> Result<[u8; 32], Error> {
         .try_into()
         .map_err(|_| anyhow!("decoded length is {}, expected 32", decoded.len()))
 }
-
 pub async fn post_to_mu(bytes: Vec<u8>) -> Result<()> {
     let client = reqwest::Client::new();
 

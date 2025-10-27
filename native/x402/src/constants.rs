@@ -4,6 +4,15 @@ use std::sync::Mutex;
 
 pub const MU_RL: &str = "https://mu.ao-testnet.xyz";
 
+pub const DEFAULT_SUPPORTED_TOKENS: [&str; 2] = [
+    "0syT13r0s0tgPmIed95bJnuSqaD29HQNN8D3ElLSrsc", // $AO
+    "SAR3pyWRX7dbIcCRgbJsoCQ1i0jPh67b0SUlAM1XhVg", // $1984 (internal testing token)
+];
+
+pub static SUPPORTED_TOKENS: Lazy<Mutex<Vec<String>>> = Lazy::new(|| {
+    Mutex::new(DEFAULT_SUPPORTED_TOKENS.iter().map(|token| token.to_string()).collect())
+});
+
 pub static AO_TAGS: Lazy<Mutex<Vec<Tag>>> = Lazy::new(|| {
     let network_tags = vec![
         Tag::new("Action", "Transfer"),

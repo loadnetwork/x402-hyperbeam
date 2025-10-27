@@ -171,6 +171,7 @@ default_message() ->
             #{<<"name">> => <<"push@1.0">>, <<"module">> => dev_push},
             #{<<"name">> => <<"query@1.0">>, <<"module">> => dev_query},
             #{<<"name">> => <<"relay@1.0">>, <<"module">> => dev_relay},
+            #{<<"name">> => <<"x402@1.0">>, <<"module">> => dev_x402_facilitator},
             #{<<"name">> => <<"router@1.0">>, <<"module">> => dev_router},
             #{<<"name">> => <<"scheduler@1.0">>, <<"module">> => dev_scheduler},
             #{<<"name">> => <<"simple-pay@1.0">>, <<"module">> => dev_simple_pay},
