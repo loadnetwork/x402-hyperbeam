@@ -1,50 +1,22 @@
 use anyhow::{Result, anyhow};
 use base64::{Engine as _, engine::general_purpose::URL_SAFE_NO_PAD};
-use bundles_rs::ans104::data_item::DataItem;
 
 pub mod ao;
 pub mod bundler;
 pub mod constants;
 
-use ao::post_to_mu;
-use constants::{AO_TAGS, DEFAULT_SUPPORTED_TOKENS, RT, SUPPORTED_TOKENS};
+use ao::{settle, verify};
+use constants::{DEFAULT_SUPPORTED_TOKENS, RT, SUPPORTED_TOKENS};
 
 async fn verify_construct_payment(x_payment: &str) -> Result<String> {
     let di_bytes = URL_SAFE_NO_PAD
         .decode(x_payment.trim())
         .map_err(|err| anyhow!("invalid base64 data item: {err}"))?;
 
-    let data_item = DataItem::from_bytes(di_bytes.as_slice())
-        .map_err(|err| anyhow!("invalid ANS-104 dataitem: {err}"))?;
-    let encoded_target = data_item
-        .target
-        .as_ref()
-        .map(|target| URL_SAFE_NO_PAD.encode(target))
-        .ok_or_else(|| anyhow!("dataitem missing target field"))?;
+    let dataitem = verify(x_payment).await?;
+    settle(di_bytes).await?;
 
-    anyhow::ensure!(
-        {
-            let tokens =
-                SUPPORTED_TOKENS.lock().map_err(|_| anyhow!("failed to lock supported tokens"))?;
-            tokens.iter().any(|accepted| accepted == &encoded_target)
-        },
-        "unsupported payment target {encoded_target}"
-    );
-    let required_tags = AO_TAGS.lock().map_err(|_| anyhow!("failed to lock AO tags"))?.clone();
-
-    for required in &required_tags {
-        if !data_item.tags.contains(required) {
-            return Err(anyhow!(
-                "dataitem missing required tag {}={}",
-                required.name,
-                required.value
-            ));
-        }
-    }
-
-    post_to_mu(di_bytes).await?;
-
-    Ok(data_item.arweave_id())
+    Ok(dataitem.arweave_id())
 }
 
 #[rustler::nif(schedule = "DirtyCpu")]
@@ -87,7 +59,7 @@ rustler::init!("x402");
 
 #[cfg(test)]
 mod tests {
-    use super::{AO_TAGS, SUPPORTED_TOKENS};
+    use crate::constants::{AO_TAGS, SUPPORTED_TOKENS};
     use base64::{Engine as _, engine::general_purpose::URL_SAFE_NO_PAD};
     use bundles_rs::{
         ans104::{data_item::DataItem, tags::Tag},
